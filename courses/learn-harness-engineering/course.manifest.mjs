@@ -495,8 +495,8 @@ const courseManifest = {
     title: "Learn Harness Engineering",
     description:
       "A project-based course on designing the environments, state, verification, and control systems that make Codex and Claude Code reliable.",
-    base: "/learn-harness-engineering/",
-    repoTreeUrl: "https://github.com/walkinglabs/learn-harness-engineering/tree/main"
+    base: "/course-builder/",
+    repoTreeUrl: "https://github.com/puppe1990/course-builder/tree/main"
   },
   brand: {
     logo: brandLogo

@@ -10,7 +10,15 @@ import { getLocaleSourceItems } from "./course-curriculum.mjs";
 import { getLocaleEntries } from "./course-locales.mjs";
 import { createLocaleDefinition } from "./course-navigation.mjs";
 
-const docsBase = courseConfig.site.base;
+const docsBase = (() => {
+  const configuredBase = process.env.DOCS_BASE_PATH ?? courseConfig.site.base;
+
+  if (!configuredBase.startsWith("/")) {
+    return `/${configuredBase.endsWith("/") ? configuredBase : `${configuredBase}/`}`;
+  }
+
+  return configuredBase.endsWith("/") ? configuredBase : `${configuredBase}/`;
+})();
 const brandLogo = courseConfig.brand.logo;
 const githubRepoTreeLink = courseConfig.site.repoTreeUrl;
 const fontStylesheetLinks = buildFontStylesheetLinks(courseConfig);

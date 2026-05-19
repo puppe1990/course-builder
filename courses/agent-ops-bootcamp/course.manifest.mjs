@@ -3,8 +3,8 @@ const courseManifest = {
     title: "Agent Ops Bootcamp",
     description:
       "A compact course on operating, debugging, and shipping agentic workflows in production teams.",
-    base: "/agent-ops-bootcamp/",
-    repoTreeUrl: "https://github.com/example/agent-ops-bootcamp/tree/main"
+    base: "/course-builder/",
+    repoTreeUrl: "https://github.com/puppe1990/course-builder/tree/main"
   },
   brand: {
     logo:
