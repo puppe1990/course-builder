@@ -31,7 +31,7 @@ function getRepoTreeUrl() {
   try {
     const remoteUrl = execSync("git remote get-url origin", {
       cwd: repoRoot,
-      encoding: "utf8"
+      encoding: "utf8",
     }).trim();
 
     if (remoteUrl.startsWith("https://github.com/")) {
@@ -42,7 +42,9 @@ function getRepoTreeUrl() {
     if (sshMatch) {
       return `https://github.com/${sshMatch[1]}/tree/main`;
     }
-  } catch {}
+  } catch {
+    // Fall back to the placeholder repository URL below.
+  }
 
   return "https://github.com/your-org/course-builder/tree/main";
 }
@@ -255,64 +257,64 @@ Introduce the first core concept for ${title}.
 ## Goal
 
 Explain what learners should understand after this module.
-`
+`,
     ],
     [
       "en/lectures/module-02/index.md",
       `# Module 2
 
 Use this module to deepen the course after the opening lesson.
-`
+`,
     ],
     [
       "en/projects/index.md",
       `# Projects
 
 Use projects to turn the course material into real output.
-`
+`,
     ],
     [
       "en/projects/project-01/index.md",
       `# Project 1
 
 Define the first practical exercise for ${title}.
-`
+`,
     ],
     [
       "en/resources/index.md",
       `# Resources
 
 Keep templates, references, and extra material here.
-`
+`,
     ],
     [
       "en/resources/templates/index.md",
       `# Templates
 
 Add copy-ready assets that students can reuse directly.
-`
+`,
     ],
     [
       "en/resources/reference/index.md",
       `# Reference
 
 Store short supporting notes, definitions, and checklists here.
-`
+`,
     ],
     [
       "en/resources/openai-advanced/index.md",
       `# Advanced
 
 Use this section for deeper material once the core course is stable.
-`
+`,
     ],
     [
       "en/skills/index.md",
       `# Guides
 
 Use this section for operating guides, playbooks, or reusable teaching aids.
-`
-    ]
+`,
+    ],
   ]);
 }
 
@@ -351,9 +353,9 @@ fs.writeFileSync(
   buildManifest({
     title,
     description: toCourseDescription(title),
-    repoTreeUrl: getRepoTreeUrl()
+    repoTreeUrl: getRepoTreeUrl(),
   }),
-  "utf8"
+  "utf8",
 );
 
 console.log(`Created course scaffold: courses/${slug}`);

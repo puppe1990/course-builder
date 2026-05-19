@@ -1,7 +1,7 @@
-import path from 'node:path'
-import { promises as fs } from 'node:fs'
-import { chromium, devices, type BrowserContext, type Page } from 'playwright'
-import { PDFDocument } from 'pdf-lib'
+import path from "node:path";
+import { promises as fs } from "node:fs";
+import { chromium, devices, type BrowserContext, type Page } from "playwright";
+import { PDFDocument } from "pdf-lib";
 import {
   artifactsRoot,
   discoverCoursePages,
@@ -9,8 +9,8 @@ import {
   pdfOutputRoot,
   startStaticServer,
   toAbsoluteSiteUrl,
-  type Language
-} from './export-site-utils'
+  type Language,
+} from "./export-site-utils";
 
 const PDF_EXPORT_CSS = `
   .VPNav,
@@ -68,28 +68,28 @@ const PDF_EXPORT_CSS = `
   body {
     background: #ffffff !important;
   }
-`
+`;
 
 async function main() {
-  const languages = parseRequestedLanguages(process.argv.slice(2))
-  const tempRoot = path.join(artifactsRoot, 'pdfs/.tmp')
+  const languages = parseRequestedLanguages(process.argv.slice(2));
+  const tempRoot = path.join(artifactsRoot, "pdfs/.tmp");
 
-  await fs.rm(tempRoot, { recursive: true, force: true })
-  await ensureDirectory(tempRoot)
-  await ensureDirectory(pdfOutputRoot)
+  await fs.rm(tempRoot, { recursive: true, force: true });
+  await ensureDirectory(tempRoot);
+  await ensureDirectory(pdfOutputRoot);
 
-  const server = await startStaticServer()
-  const browser = await chromium.launch({ headless: true })
-  const context = await browser.newContext(devices['Desktop Chrome'])
+  const server = await startStaticServer();
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext(devices["Desktop Chrome"]);
 
   try {
     for (const language of languages) {
-      await buildLanguagePdf(context, server.origin, language, tempRoot)
+      await buildLanguagePdf(context, server.origin, language, tempRoot);
     }
   } finally {
-    await context.close()
-    await browser.close()
-    await server.close()
+    await context.close();
+    await browser.close();
+    await server.close();
   }
 }
 
@@ -97,96 +97,106 @@ async function buildLanguagePdf(
   context: BrowserContext,
   origin: string,
   language: Language,
-  tempRoot: string
+  tempRoot: string,
 ) {
-  const pages = await discoverCoursePages(language)
-  const tempLanguageDir = path.join(tempRoot, language)
-  const outputPdf = path.join(pdfOutputRoot, `learn-harness-engineering-${language}.pdf`)
-  const manifestPath = path.join(pdfOutputRoot, `learn-harness-engineering-${language}.json`)
+  const pages = await discoverCoursePages(language);
+  const tempLanguageDir = path.join(tempRoot, language);
+  const outputPdf = path.join(
+    pdfOutputRoot,
+    `learn-harness-engineering-${language}.pdf`,
+  );
+  const manifestPath = path.join(
+    pdfOutputRoot,
+    `learn-harness-engineering-${language}.json`,
+  );
 
-  await fs.rm(tempLanguageDir, { recursive: true, force: true })
-  await ensureDirectory(tempLanguageDir)
+  await fs.rm(tempLanguageDir, { recursive: true, force: true });
+  await ensureDirectory(tempLanguageDir);
 
-  const manifest: Array<{ title: string; routePath: string }> = []
-  const tempPdfPaths: string[] = []
+  const manifest: Array<{ title: string; routePath: string }> = [];
+  const tempPdfPaths: string[] = [];
 
-  let pageIndex = 1
+  let pageIndex = 1;
   for (const entry of pages) {
-    const page = await context.newPage()
-    const url = toAbsoluteSiteUrl(origin, entry.routePath)
+    const page = await context.newPage();
+    const url = toAbsoluteSiteUrl(origin, entry.routePath);
 
-    await page.goto(url, { waitUntil: 'networkidle' })
-    await page.addStyleTag({ content: PDF_EXPORT_CSS })
-    await page.emulateMedia({ media: 'screen' })
+    await page.goto(url, { waitUntil: "networkidle" });
+    await page.addStyleTag({ content: PDF_EXPORT_CSS });
+    await page.emulateMedia({ media: "screen" });
 
-    const title = await extractPageTitle(page, entry.titleHint)
+    const title = await extractPageTitle(page, entry.titleHint);
     const safeSlug = entry.routePath
-      .replace(/^\/+/, '')
-      .replace(/\/+$/, '')
-      .replace(/[/.]+/g, '-')
-      .replace(/-+/g, '-')
-      .toLowerCase()
+      .replace(/^\/+/, "")
+      .replace(/\/+$/, "")
+      .replace(/[/.]+/g, "-")
+      .replace(/-+/g, "-")
+      .toLowerCase();
 
     const tempPdfPath = path.join(
       tempLanguageDir,
-      `${String(pageIndex).padStart(2, '0')}-${safeSlug || language}.pdf`
-    )
+      `${String(pageIndex).padStart(2, "0")}-${safeSlug || language}.pdf`,
+    );
 
     await page.pdf({
       path: tempPdfPath,
-      format: 'A4',
+      format: "A4",
       printBackground: true,
       margin: {
-        top: '14mm',
-        bottom: '14mm',
-        left: '12mm',
-        right: '12mm'
+        top: "14mm",
+        bottom: "14mm",
+        left: "12mm",
+        right: "12mm",
       },
       displayHeaderFooter: true,
-      headerTemplate: '<div></div>',
+      headerTemplate: "<div></div>",
       footerTemplate:
-        '<div style="width:100%;font-size:9px;padding:0 12mm;color:#777;display:flex;justify-content:center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>'
-    })
+        '<div style="width:100%;font-size:9px;padding:0 12mm;color:#777;display:flex;justify-content:center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>',
+    });
 
-    await page.close()
+    await page.close();
 
-    manifest.push({ title, routePath: entry.routePath })
-    tempPdfPaths.push(tempPdfPath)
-    console.log(`Rendered ${language.toUpperCase()} PDF section: ${title}`)
-    pageIndex += 1
+    manifest.push({ title, routePath: entry.routePath });
+    tempPdfPaths.push(tempPdfPath);
+    console.log(`Rendered ${language.toUpperCase()} PDF section: ${title}`);
+    pageIndex += 1;
   }
 
-  const coverPdfPath = path.join(tempLanguageDir, `00-cover-${language}.pdf`)
-  await renderCoverPage(context, coverPdfPath, language, manifest)
-  await mergePdfs([coverPdfPath, ...tempPdfPaths], outputPdf)
-  await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2))
+  const coverPdfPath = path.join(tempLanguageDir, `00-cover-${language}.pdf`);
+  await renderCoverPage(context, coverPdfPath, language, manifest);
+  await mergePdfs([coverPdfPath, ...tempPdfPaths], outputPdf);
+  await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
-  console.log(`Built ${outputPdf}`)
+  console.log(`Built ${outputPdf}`);
 }
 
 async function extractPageTitle(page: Page, fallback: string) {
-  const heading = await page.locator('h1').first().textContent().catch(() => null)
-  const title = heading?.trim()
-  if (title) return title
-  const documentTitle = await page.title()
-  return documentTitle.split('|')[0].trim() || fallback
+  const heading = await page
+    .locator("h1")
+    .first()
+    .textContent()
+    .catch(() => null);
+  const title = heading?.trim();
+  if (title) return title;
+  const documentTitle = await page.title();
+  return documentTitle.split("|")[0].trim() || fallback;
 }
 
 async function renderCoverPage(
   context: BrowserContext,
   outputPath: string,
   language: Language,
-  manifest: Array<{ title: string; routePath: string }>
+  manifest: Array<{ title: string; routePath: string }>,
 ) {
-  const page = await context.newPage()
-  const generatedAt = new Date().toISOString().slice(0, 10)
-  const languageLabel = language === 'en' ? 'English' : '简体中文'
+  const page = await context.newPage();
+  const generatedAt = new Date().toISOString().slice(0, 10);
+  const languageLabel = language === "en" ? "English" : "简体中文";
   const contents = manifest
     .map(
       (entry) =>
-        `<li><span>${escapeHtml(entry.title)}</span><code>${escapeHtml(entry.routePath)}</code></li>`
+        `<li><span>${escapeHtml(entry.title)}</span><code>${escapeHtml(entry.routePath)}</code></li>`,
     )
-    .join('')
+    .join("");
 
   await page.setContent(
     `<!doctype html>
@@ -235,60 +245,60 @@ async function renderCoverPage(
           <ol>${contents}</ol>
         </body>
       </html>`,
-    { waitUntil: 'load' }
-  )
+    { waitUntil: "load" },
+  );
 
   await page.pdf({
     path: outputPath,
-    format: 'A4',
+    format: "A4",
     printBackground: true,
     margin: {
-      top: '14mm',
-      bottom: '14mm',
-      left: '12mm',
-      right: '12mm'
-    }
-  })
-  await page.close()
+      top: "14mm",
+      bottom: "14mm",
+      left: "12mm",
+      right: "12mm",
+    },
+  });
+  await page.close();
 }
 
 async function mergePdfs(inputPaths: string[], outputPath: string) {
-  const merged = await PDFDocument.create()
+  const merged = await PDFDocument.create();
 
   for (const inputPath of inputPaths) {
-    const sourceBytes = await fs.readFile(inputPath)
-    const source = await PDFDocument.load(sourceBytes)
-    const copiedPages = await merged.copyPages(source, source.getPageIndices())
+    const sourceBytes = await fs.readFile(inputPath);
+    const source = await PDFDocument.load(sourceBytes);
+    const copiedPages = await merged.copyPages(source, source.getPageIndices());
     for (const copiedPage of copiedPages) {
-      merged.addPage(copiedPage)
+      merged.addPage(copiedPage);
     }
   }
 
-  await fs.writeFile(outputPath, await merged.save())
+  await fs.writeFile(outputPath, await merged.save());
 }
 
 function parseRequestedLanguages(args: string[]): Language[] {
-  const languageIndex = args.findIndex((arg) => arg === '--lang')
+  const languageIndex = args.findIndex((arg) => arg === "--lang");
   if (languageIndex === -1) {
-    return ['en', 'zh']
+    return ["en", "zh"];
   }
 
-  const value = args[languageIndex + 1]
-  if (value === 'en' || value === 'zh') {
-    return [value]
+  const value = args[languageIndex + 1];
+  if (value === "en" || value === "zh") {
+    return [value];
   }
 
-  throw new Error(`Unsupported language: ${value}`)
+  throw new Error(`Unsupported language: ${value}`);
 }
 
 function escapeHtml(value: string) {
   return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 main().catch((error) => {
-  console.error(error)
-  process.exitCode = 1
-})
+  console.error(error);
+  process.exitCode = 1;
+});

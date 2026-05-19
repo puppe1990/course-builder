@@ -4,11 +4,11 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 import courseConfig from "./course.config.mjs";
 import {
   buildFontStylesheetLinks,
-  buildMermaidThemeVariables
+  buildMermaidThemeVariables,
 } from "./course-branding.mjs";
 import {
   ACTIVE_COURSE_CONTENT_DIR,
-  ACTIVE_COURSE_REPO_CONTENT_PREFIX
+  ACTIVE_COURSE_REPO_CONTENT_PREFIX,
 } from "./active-course.mjs";
 import { getLocaleSourceItems } from "./course-curriculum.mjs";
 import { getLocaleEntries } from "./course-locales.mjs";
@@ -37,9 +37,9 @@ const locales = Object.fromEntries(
       sourceItems: getLocaleSourceItems(entry.key),
       labels: entry.labels,
       repoTreeUrl: githubRepoTreeLink,
-      repoContentPrefix: ACTIVE_COURSE_REPO_CONTENT_PREFIX
-    })
-  ])
+      repoContentPrefix: ACTIVE_COURSE_REPO_CONTENT_PREFIX,
+    }),
+  ]),
 );
 
 export default withMermaid(
@@ -53,20 +53,20 @@ export default withMermaid(
     ignoreDeadLinks: true,
     head: [
       ...fontStylesheetLinks,
-      ["link", { rel: "icon", type: "image/svg+xml", href: brandLogo }]
+      ["link", { rel: "icon", type: "image/svg+xml", href: brandLogo }],
     ],
     themeConfig: {
       logo: brandLogo,
       search: {
-        provider: "local"
+        provider: "local",
       },
-      socialLinks: [{ icon: "github", link: githubRepoTreeLink }]
+      socialLinks: [{ icon: "github", link: githubRepoTreeLink }],
     },
     markdown: {
       theme: {
         light: "github-light",
-        dark: "github-dark"
-      }
+        dark: "github-dark",
+      },
     },
     mermaid: {
       theme: "base",
@@ -74,9 +74,9 @@ export default withMermaid(
       flowchart: {
         nodeSpacing: 40,
         rankSpacing: 56,
-        padding: 12
-      }
+        padding: 12,
+      },
     },
-    locales
-  })
+    locales,
+  }),
 );

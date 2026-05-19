@@ -3,8 +3,8 @@ export function buildFontStylesheetLinks(courseConfig) {
     "link",
     {
       rel: "stylesheet",
-      href
-    }
+      href,
+    },
   ]);
 }
 
@@ -17,7 +17,7 @@ export function buildMermaidThemeVariables(courseConfig) {
     primaryTextColor: light.text1,
     lineColor: light.text3,
     fontFamily: courseConfig.theme.typography.mermaid,
-    fontSize: "18px"
+    fontSize: "18px",
   };
 }
 
@@ -60,6 +60,6 @@ export function buildCourseCssTokens(courseConfig) {
     "--course-dark-brand-soft": colors.dark.brandSoft,
     "--course-dark-divider": colors.dark.divider,
     "--course-dark-sidebar-bg": colors.dark.sidebarBg,
-    "--course-dark-nav-bg": colors.dark.navBg
+    "--course-dark-nav-bg": colors.dark.navBg,
   };
 }

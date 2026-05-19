@@ -2,42 +2,47 @@
 
 /* ---------- CSS Variables (Light) ---------- */
 :root {
-  --course-light-bg: #FAF9F5;
-  --course-light-bg-alt: #F4F3EE;
-  --course-light-bg-elv: #FFFFFF;
-  --course-light-bg-soft: #F4F3EE;
-  --course-light-text-1: #1A1A1A;
-  --course-light-text-2: #4A4A4A;
+  --course-light-bg: #faf9f5;
+  --course-light-bg-alt: #f4f3ee;
+  --course-light-bg-elv: #ffffff;
+  --course-light-bg-soft: #f4f3ee;
+  --course-light-text-1: #1a1a1a;
+  --course-light-text-2: #4a4a4a;
   --course-light-text-3: #757575;
-  --course-light-brand-1: #D95C41;
-  --course-light-brand-2: #C14E36;
-  --course-light-brand-3: #A8412B;
+  --course-light-brand-1: #d95c41;
+  --course-light-brand-2: #c14e36;
+  --course-light-brand-3: #a8412b;
   --course-light-brand-soft: rgba(217, 92, 65, 0.1);
   --course-light-divider: rgba(0, 0, 0, 0.08);
-  --course-light-sidebar-bg: #F4F3EE;
-  --course-light-nav-bg: #FAF9F5;
-  --course-dark-bg: #1A1A1A;
+  --course-light-sidebar-bg: #f4f3ee;
+  --course-light-nav-bg: #faf9f5;
+  --course-dark-bg: #1a1a1a;
   --course-dark-bg-alt: #141414;
   --course-dark-bg-elv: #242424;
   --course-dark-bg-soft: #141414;
-  --course-dark-text-1: #E5E5E5;
-  --course-dark-text-2: #B3B3B3;
+  --course-dark-text-1: #e5e5e5;
+  --course-dark-text-2: #b3b3b3;
   --course-dark-text-3: #808080;
-  --course-dark-brand-1: #E07A64;
-  --course-dark-brand-2: #D95C41;
-  --course-dark-brand-3: #C14E36;
+  --course-dark-brand-1: #e07a64;
+  --course-dark-brand-2: #d95c41;
+  --course-dark-brand-3: #c14e36;
   --course-dark-brand-soft: rgba(224, 122, 100, 0.15);
   --course-dark-divider: rgba(255, 255, 255, 0.1);
   --course-dark-sidebar-bg: #141414;
-  --course-dark-nav-bg: #1A1A1A;
+  --course-dark-nav-bg: #1a1a1a;
   --course-layout-max-width: 1376px;
   --course-sidebar-width: 296px;
   --course-card-radius: 12px;
   --course-feature-shadow: 0 18px 48px rgba(217, 92, 65, 0.12);
   --course-feature-shadow-dark: 0 18px 48px rgba(0, 0, 0, 0.35);
-  --course-font-body: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --course-font-heading: 'Fraunces', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --course-font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --course-font-body:
+    "Instrument Sans", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --course-font-heading:
+    "Fraunces", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --course-font-mono:
+    "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
   --vp-c-bg: var(--course-light-bg);
   --vp-c-bg-alt: var(--course-light-bg-alt);
   --vp-c-bg-elv: var(--course-light-bg-elv);
@@ -142,14 +147,14 @@
   font-size: 0.9em;
 }
 
-.vp-doc div[class*='language-'] {
+.vp-doc div[class*="language-"] {
   border-radius: 12px;
   margin: 16px 0;
   border: 1px solid var(--vp-c-divider);
   background-color: var(--vp-c-bg-elv);
 }
 
-.vp-doc div[class*='language-'] button.copy {
+.vp-doc div[class*="language-"] button.copy {
   background-color: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
   border-radius: 6px;
@@ -165,7 +170,8 @@
 }
 
 /* ---------- Lists ---------- */
-.vp-doc ul, .vp-doc ol {
+.vp-doc ul,
+.vp-doc ol {
   padding-left: 1.25rem;
 }
 
@@ -212,7 +218,10 @@
 .VPFeature {
   border-radius: var(--course-card-radius) !important;
   border: 1px solid var(--vp-c-divider) !important;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s !important;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s !important;
   padding: 20px 24px !important;
 }
 
@@ -250,7 +259,9 @@
   position: relative;
   align-items: flex-start;
   border-radius: 8px !important;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   color: var(--vp-c-text-2) !important;
   font-size: 0.9rem;
   padding: 8px 12px !important;
@@ -411,8 +422,8 @@
 
 /* Nav Action Button (Try Harness) */
 .VPNavBarMenuLink[href*="/blob/main/docs/"] {
-  background-color: #1A1A1A !important;
-  color: #FFFFFF !important;
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
   border-radius: 20px !important;
   padding: 0 16px !important;
   margin: 0 4px 0 12px !important;
@@ -427,17 +438,17 @@
 
 .VPNavBarMenuLink[href*="/blob/main/docs/"]:hover {
   background-color: #333333 !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .dark .VPNavBarMenuLink[href*="/blob/main/docs/"] {
-  background-color: #E5E5E5 !important;
-  color: #1A1A1A !important;
+  background-color: #e5e5e5 !important;
+  color: #1a1a1a !important;
 }
 
 .dark .VPNavBarMenuLink[href*="/blob/main/docs/"]:hover {
-  background-color: #FFFFFF !important;
-  color: #1A1A1A !important;
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
 }
 
 .VPNavBarMenuLink[href*="/blob/main/docs/"]::after {
@@ -454,7 +465,7 @@
 }
 
 .VPNavBarMenuLink.active:not([href*="/blob/main/docs/"])::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -1px;
   left: 0;
@@ -469,8 +480,8 @@
 
 /* GitHub Black Button */
 .VPNavBarSocialLink {
-  background-color: #1A1A1A !important;
-  color: #FFFFFF !important;
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
   border-radius: 20px;
   padding: 0 16px 0 12px !important;
   height: 32px !important;
@@ -495,12 +506,12 @@
 }
 
 .dark .VPNavBarSocialLink {
-  background-color: #E5E5E5 !important;
-  color: #1A1A1A !important;
+  background-color: #e5e5e5 !important;
+  color: #1a1a1a !important;
 }
 
 .dark .VPNavBarSocialLink:hover {
-  background-color: #FFFFFF !important;
+  background-color: #ffffff !important;
 }
 
 @media (min-width: 768px) {
@@ -519,7 +530,8 @@
   overflow: hidden;
 }
 
-.vp-doc th, .vp-doc td {
+.vp-doc th,
+.vp-doc td {
   padding: 10px 16px;
   border: 1px solid var(--vp-c-divider);
 }
@@ -583,7 +595,7 @@
 }
 
 .vp-doc .mermaid::after {
-  content: 'Click to expand';
+  content: "Click to expand";
   position: absolute;
   top: 0;
   right: 0;
@@ -605,7 +617,7 @@
 }
 
 html:lang(zh-CN) .vp-doc .mermaid::after {
-  content: '点击放大';
+  content: "点击放大";
 }
 
 .vp-doc .mermaid:focus-visible {
@@ -636,14 +648,14 @@ html:lang(zh-CN) .vp-doc .mermaid::after {
   }
 
   .vp-doc .mermaid::after {
-    content: 'Tap to expand';
+    content: "Tap to expand";
     opacity: 1;
     top: 0;
     right: 0;
   }
 
   html:lang(zh-CN) .vp-doc .mermaid::after {
-    content: '点击放大';
+    content: "点击放大";
   }
 }
 
@@ -837,7 +849,7 @@ html.has-mermaid-viewer body {
 }
 
 .index-list li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 10px;

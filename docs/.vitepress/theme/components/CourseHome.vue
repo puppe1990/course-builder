@@ -34,7 +34,12 @@ const content = computed(() => getCourseHome(locale.value));
     <p>{{ content.startText }}</p>
 
     <div class="card-grid">
-      <a v-for="card in content.cards" :key="card.href" :href="card.href" class="card">
+      <a
+        v-for="card in content.cards"
+        :key="card.href"
+        :href="card.href"
+        class="card"
+      >
         <h3>{{ card.title }}</h3>
         <p>{{ card.body }}</p>
       </a>
@@ -55,7 +60,8 @@ const content = computed(() => getCourseHome(locale.value));
     <p>{{ content.nextIntro }}</p>
     <ul class="index-list">
       <li v-for="step in content.nextSteps" :key="step.href">
-        <a :href="step.href">{{ step.title }}</a>: {{ step.description }}
+        <a :href="step.href">{{ step.title }}</a
+        >: {{ step.description }}
       </li>
     </ul>
   </div>

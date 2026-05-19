@@ -1,0 +1,6 @@
+node_modules/
+docs/.vitepress/dist/
+.git-history-backup-20260519/
+coverage/
+artifacts/
+temp/

@@ -4,7 +4,10 @@ import process from "node:process";
 
 const repoRoot = process.cwd();
 const coursesDir = path.join(repoRoot, "courses");
-const activeCourseFile = path.join(repoRoot, "docs/.vitepress/active-course.mjs");
+const activeCourseFile = path.join(
+  repoRoot,
+  "docs/.vitepress/active-course.mjs",
+);
 
 function listCourseSlugs() {
   if (!fs.existsSync(coursesDir)) return [];
@@ -13,7 +16,9 @@ function listCourseSlugs() {
     .readdirSync(coursesDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .filter((slug) => fs.existsSync(path.join(coursesDir, slug, "course.manifest.mjs")))
+    .filter((slug) =>
+      fs.existsSync(path.join(coursesDir, slug, "course.manifest.mjs")),
+    )
     .sort();
 }
 
