@@ -40,7 +40,8 @@ function syncCourseDirectory(slug) {
   const source = getDocsPath(slug);
   const target = path.join(docsCoursesDir, slug);
 
-  clearDirectory(target);
+  fs.rmSync(target, { recursive: true, force: true });
+  ensureDirectory(path.dirname(target));
   fs.cpSync(source, target, {
     recursive: true,
     force: true,

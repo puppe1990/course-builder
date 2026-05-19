@@ -1,11 +1,29 @@
 import path from "node:path";
 import process from "node:process";
+import fs from "node:fs";
 
 export const repoRoot = process.cwd();
-export const externalCoursesDir = path.resolve(
+export const defaultExternalCoursesDir = path.resolve(
   repoRoot,
-  process.env.COURSE_SOURCE_DIR || "../course-builder-courses",
+  "../course-builder-courses",
 );
+export const fallbackFixtureCoursesDir = path.join(
+  repoRoot,
+  "tests",
+  "fixtures",
+  "course-source",
+);
+export const externalCoursesDir = (() => {
+  if (process.env.COURSE_SOURCE_DIR) {
+    return path.resolve(repoRoot, process.env.COURSE_SOURCE_DIR);
+  }
+
+  if (fs.existsSync(defaultExternalCoursesDir)) {
+    return defaultExternalCoursesDir;
+  }
+
+  return fallbackFixtureCoursesDir;
+})();
 export const docsCoursesDir = path.join(repoRoot, "docs", "courses");
 export const generatedRegistryFile = path.join(
   repoRoot,

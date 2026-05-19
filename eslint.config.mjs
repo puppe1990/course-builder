@@ -4,6 +4,8 @@ import tseslint from "typescript-eslint";
 
 const ignores = [
   "node_modules/**",
+  ".vitepress/cache/**",
+  "docs/.vitepress/cache/**",
   "docs/.vitepress/dist/**",
   ".git-history-backup-20260519/**",
   "projects/**",
