@@ -1,42 +1,30 @@
 import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-
-const repoRoot = process.cwd();
-const coursesDir = path.join(repoRoot, "courses");
-const activeCourseFile = path.join(
-  repoRoot,
-  "docs/.vitepress/active-course.mjs",
-);
+import {
+  externalCoursesDir,
+  featuredCourseConfigFile,
+  getDocsPath,
+  getManifestPath,
+} from "./course-source-config.mjs";
 
 function listCourseSlugs() {
-  if (!fs.existsSync(coursesDir)) return [];
+  if (!fs.existsSync(externalCoursesDir)) return [];
 
   return fs
-    .readdirSync(coursesDir, { withFileTypes: true })
+    .readdirSync(externalCoursesDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .filter((slug) =>
-      fs.existsSync(path.join(coursesDir, slug, "course.manifest.mjs")),
-    )
+    .filter((slug) => fs.existsSync(getManifestPath(slug)))
     .sort();
-}
-
-function buildActiveCourseModule(slug) {
-  return `import courseManifest from "../../courses/${slug}/course.manifest.mjs";
-
-export const ACTIVE_COURSE_SLUG = "${slug}";
-export const ACTIVE_COURSE_CONTENT_DIR = "../courses/${slug}/docs";
-export const ACTIVE_COURSE_REPO_CONTENT_PREFIX = "courses/${slug}/docs";
-
-export default courseManifest;
-`;
 }
 
 function printUsage() {
   console.log("Usage:");
   console.log("  npm run course:list");
   console.log("  npm run course:activate -- <course-slug>");
+  console.log("");
+  console.log(
+    "Sets the featured course used by compatibility wrappers and catalog ordering.",
+  );
 }
 
 const args = process.argv.slice(2);
@@ -68,12 +56,16 @@ if (!availableCourses.includes(slug)) {
   process.exit(1);
 }
 
-const courseDocsDir = path.join(coursesDir, slug, "docs");
+const courseDocsDir = getDocsPath(slug);
 
 if (!fs.existsSync(courseDocsDir)) {
-  console.error(`Course is missing docs directory: courses/${slug}/docs`);
+  console.error(`Course is missing docs directory: ${courseDocsDir}`);
   process.exit(1);
 }
 
-fs.writeFileSync(activeCourseFile, buildActiveCourseModule(slug), "utf8");
-console.log(`Active course set to: ${slug}`);
+fs.writeFileSync(
+  featuredCourseConfigFile,
+  `${JSON.stringify({ slug }, null, 2)}\n`,
+  "utf8",
+);
+console.log(`Featured course set to: ${slug}`);

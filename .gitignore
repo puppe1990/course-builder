@@ -25,6 +25,10 @@ pnpm-debug.log*
 .vitepress/dist/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
+docs/.vitepress/generated-course-data.mjs
+docs/.vitepress/featured-course.json
+courses/
+docs/courses/
 *.tsbuildinfo
 artifacts/
 dist/

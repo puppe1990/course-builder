@@ -1,21 +1,66 @@
 <script setup>
-import { computed } from "vue";
-import { useData } from "vitepress";
-import { getCourseHome } from "../../course-content.mjs";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { useData, useRoute } from "vitepress";
+import { getCourseHomeForCourse } from "../../course-content.mjs";
+import {
+  resolveCourseContextFromPath,
+  resolveCourseContextFromRelativePath,
+} from "../../course-routes.mjs";
 
-const { lang } = useData();
+const route = useRoute();
+const { page } = useData();
+const mermaidHost = ref(null);
+let mermaidRenderSequence = 0;
 
-const locale = computed(() => {
-  const raw = lang.value || "en";
-  if (raw.startsWith("ko")) return "ko";
-  return "en";
+const courseContext = computed(
+  () =>
+    resolveCourseContextFromRelativePath(page.value.relativePath) ||
+    resolveCourseContextFromPath(route.path),
+);
+
+const content = computed(() => {
+  if (!courseContext.value) return null;
+
+  return getCourseHomeForCourse(
+    courseContext.value.slug,
+    courseContext.value.locale,
+  );
 });
 
-const content = computed(() => getCourseHome(locale.value));
+async function renderMechanismDiagram() {
+  if (typeof window === "undefined" || !mermaidHost.value) return;
+
+  const source = content.value?.mechanismMermaid?.trim();
+  if (!source) {
+    mermaidHost.value.innerHTML = "";
+    return;
+  }
+
+  const { default: mermaid } = await import("mermaid");
+  mermaid.initialize({ startOnLoad: false });
+
+  const renderId = `course-home-mermaid-${(mermaidRenderSequence += 1)}`;
+  const { svg, bindFunctions } = await mermaid.render(renderId, source);
+
+  mermaidHost.value.innerHTML = svg;
+  bindFunctions?.(mermaidHost.value);
+}
+
+onMounted(() => {
+  renderMechanismDiagram();
+});
+
+watch(
+  () => content.value?.mechanismMermaid,
+  async () => {
+    await nextTick();
+    renderMechanismDiagram();
+  },
+);
 </script>
 
 <template>
-  <div class="course-home">
+  <div v-if="content" class="course-home">
     <h1>{{ content.hero.title }}</h1>
 
     <p v-for="paragraph in content.hero.intro" :key="paragraph">
@@ -47,7 +92,7 @@ const content = computed(() => getCourseHome(locale.value));
 
     <h2>{{ content.sections.mechanism }}</h2>
     <p>{{ content.mechanismText }}</p>
-    <pre class="mermaid">{{ content.mechanismMermaid }}</pre>
+    <div ref="mermaidHost" class="mermaid" />
 
     <h2>{{ content.sections.learn }}</h2>
     <ul class="index-list">
