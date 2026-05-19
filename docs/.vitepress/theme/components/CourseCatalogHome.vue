@@ -8,6 +8,7 @@ import {
 
 const courses = computed(() => getCourseCatalog());
 const featuredCourse = computed(() => getFeaturedCourseEntry());
+const hasCourses = computed(() => courses.value.length > 0);
 
 function formatCount(value, singular, plural) {
   return `${value} ${value === 1 ? singular : plural}`;
@@ -30,14 +31,25 @@ function resolveSitePath(path) {
         pode navegar entre os cursos sem trocar a configuração do projeto.
       </p>
 
-      <div class="course-catalog__active">
+      <div v-if="featuredCourse" class="course-catalog__active">
         <span class="course-catalog__active-label">Curso em destaque</span>
         <strong>{{ featuredCourse.title }}</strong>
         <a :href="resolveSitePath(featuredCourse.homePath)">Abrir destaque</a>
       </div>
+      <div v-else class="course-catalog__active course-catalog__active--empty">
+        <span class="course-catalog__active-label"
+          >Sem cursos sincronizados</span
+        >
+        <strong>Nenhum curso disponível no momento</strong>
+        <span>
+          Adicione conteúdos em
+          <code>course-builder-courses</code>
+          e rode o sync novamente.
+        </span>
+      </div>
     </section>
 
-    <section class="course-catalog__grid">
+    <section v-if="hasCourses" class="course-catalog__grid">
       <article
         v-for="course in courses"
         :key="course.slug"
@@ -99,6 +111,18 @@ function resolveSitePath(path) {
           </a>
         </div>
       </article>
+    </section>
+
+    <section v-else class="course-catalog__empty">
+      <h2>Nenhum curso encontrado</h2>
+      <p>
+        O builder iniciou corretamente, mas a pasta externa de cursos está
+        vazia.
+      </p>
+      <p>
+        Caminho esperado:
+        <code>/Users/matheuspuppe/Desktop/estudo/course-builder-courses</code>
+      </p>
     </section>
   </div>
 </template>

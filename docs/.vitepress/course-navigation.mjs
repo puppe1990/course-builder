@@ -1,4 +1,4 @@
-import { getAllCourses, getPlatformConfig } from "./course-registry.mjs";
+import { getAllCourses } from "./course-registry.mjs";
 import { getCourseLocaleBasePath } from "./course-routes.mjs";
 
 const LOCALE_PREFIX_PATTERN = /^\/[^/]+\//;
@@ -89,19 +89,11 @@ export function buildGlobalSidebar() {
 }
 
 export function buildGlobalNav() {
-  const platformConfig = getPlatformConfig();
-
   return [
     {
       text: "Cursos",
       link: "/",
       activeMatch: "^/$|^/courses/",
-    },
-    {
-      text: "Repositório",
-      link: platformConfig.site.repoTreeUrl,
-      target: "_blank",
-      rel: "noopener noreferrer",
     },
   ];
 }
