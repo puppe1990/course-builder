@@ -11,7 +11,8 @@ export function buildLocaleThemeConfig({
   locale,
   sourceItems,
   labels,
-  repoTreeUrl
+  repoTreeUrl,
+  repoContentPrefix = "docs"
 }) {
   const lectures = relinkItems(sourceItems.lectures, locale);
   const projects = relinkItems(sourceItems.projects, locale);
@@ -26,7 +27,7 @@ export function buildLocaleThemeConfig({
       { text: labels.skills, link: `/${locale}/skills/`, activeMatch: `^/${locale}/skills/` },
       {
         text: labels.tryHarness,
-        link: `${repoTreeUrl.replace(/\/tree\/main$/, "/blob/main")}/docs/${locale}/resources/templates/index.md`,
+        link: `${repoTreeUrl.replace(/\/tree\/main$/, "/blob/main")}/${repoContentPrefix}/${locale}/resources/templates/index.md`,
         target: "_blank",
         rel: "noopener noreferrer"
       }
@@ -63,7 +64,8 @@ export function createLocaleDefinition({
   lang,
   sourceItems,
   labels,
-  repoTreeUrl
+  repoTreeUrl,
+  repoContentPrefix
 }) {
   return {
     label,
@@ -73,7 +75,8 @@ export function createLocaleDefinition({
       locale,
       sourceItems,
       labels,
-      repoTreeUrl
+      repoTreeUrl,
+      repoContentPrefix
     })
   };
 }

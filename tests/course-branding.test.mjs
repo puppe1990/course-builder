@@ -3,7 +3,11 @@ import assert from "node:assert/strict";
 
 import bootcampManifest from "../courses/agent-ops-bootcamp/course.manifest.mjs";
 import courseManifest from "../docs/.vitepress/course.manifest.mjs";
-import { ACTIVE_COURSE_SLUG } from "../docs/.vitepress/active-course.mjs";
+import {
+  ACTIVE_COURSE_CONTENT_DIR,
+  ACTIVE_COURSE_REPO_CONTENT_PREFIX,
+  ACTIVE_COURSE_SLUG
+} from "../docs/.vitepress/active-course.mjs";
 import courseConfig from "../docs/.vitepress/course.config.mjs";
 import {
   buildCourseCssTokens,
@@ -44,11 +48,16 @@ test("course manifest centralizes product config in one source", () => {
   assert.ok(courseManifest.curriculum.en);
   assert.ok(courseManifest.homeByLocale.en);
   assert.equal(typeof ACTIVE_COURSE_SLUG, "string");
+  assert.match(ACTIVE_COURSE_CONTENT_DIR, /^\.\.\/courses\/.+\/docs$/);
+  assert.equal(
+    ACTIVE_COURSE_REPO_CONTENT_PREFIX,
+    `courses/${ACTIVE_COURSE_SLUG}/docs`
+  );
 });
 
 test("platform can load a second course manifest with distinct branding and curriculum", () => {
   assert.equal(bootcampManifest.site.title, "Agent Ops Bootcamp");
-  assert.equal(bootcampManifest.site.base, "/agent-ops-bootcamp/");
+  assert.equal(bootcampManifest.site.base, "/course-builder/");
   assert.equal(bootcampManifest.locales[0].labels.lectures, "Modules");
   assert.equal(bootcampManifest.curriculum.en.projects[1].text, "Incident Drill");
   assert.equal(bootcampManifest.homeByLocale.en.cards[0].title, "Modules");
@@ -121,7 +130,8 @@ test("buildLocaleThemeConfig creates nav and sidebar from labels and source item
     locale: "ko",
     sourceItems,
     labels,
-    repoTreeUrl: courseConfig.site.repoTreeUrl
+    repoTreeUrl: courseConfig.site.repoTreeUrl,
+    repoContentPrefix: ACTIVE_COURSE_REPO_CONTENT_PREFIX
   });
 
   assert.equal(themeConfig.nav[0].text, "강의");
@@ -132,7 +142,7 @@ test("buildLocaleThemeConfig creates nav and sidebar from labels and source item
   assert.equal(themeConfig.sidebar["/ko/projects/"][0].text, "프로젝트");
   assert.equal(
     themeConfig.nav[4].link,
-    `${courseConfig.site.repoTreeUrl.replace(/\/tree\/main$/, "/blob/main")}/docs/ko/resources/templates/index.md`
+    `${courseConfig.site.repoTreeUrl.replace(/\/tree\/main$/, "/blob/main")}/${ACTIVE_COURSE_REPO_CONTENT_PREFIX}/ko/resources/templates/index.md`
   );
 });
 
@@ -152,7 +162,8 @@ test("createLocaleDefinition wraps locale metadata with generated theme config",
     ...createEnglishLocaleMeta(),
     sourceItems,
     labels,
-    repoTreeUrl: courseConfig.site.repoTreeUrl
+    repoTreeUrl: courseConfig.site.repoTreeUrl,
+    repoContentPrefix: ACTIVE_COURSE_REPO_CONTENT_PREFIX
   });
 
   assert.equal(localeDefinition.label.length > 0, true);

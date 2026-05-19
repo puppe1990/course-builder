@@ -13,6 +13,7 @@
     "docs:preview": "vitepress preview docs",
     "lecture:run": "tsx",
     "course:list": "node scripts/set-active-course.mjs --list",
+    "course:new": "node scripts/new-course.mjs",
     "course:activate": "node scripts/set-active-course.mjs",
     "screenshots:readme": "node --import tsx scripts/capture-readme-screenshots.ts",
     "pdf:export": "node --import tsx scripts/build-course-pdfs.ts",

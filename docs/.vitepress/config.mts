@@ -6,6 +6,10 @@ import {
   buildFontStylesheetLinks,
   buildMermaidThemeVariables
 } from "./course-branding.mjs";
+import {
+  ACTIVE_COURSE_CONTENT_DIR,
+  ACTIVE_COURSE_REPO_CONTENT_PREFIX
+} from "./active-course.mjs";
 import { getLocaleSourceItems } from "./course-curriculum.mjs";
 import { getLocaleEntries } from "./course-locales.mjs";
 import { createLocaleDefinition } from "./course-navigation.mjs";
@@ -32,13 +36,15 @@ const locales = Object.fromEntries(
       lang: entry.lang,
       sourceItems: getLocaleSourceItems(entry.key),
       labels: entry.labels,
-      repoTreeUrl: githubRepoTreeLink
+      repoTreeUrl: githubRepoTreeLink,
+      repoContentPrefix: ACTIVE_COURSE_REPO_CONTENT_PREFIX
     })
   ])
 );
 
 export default withMermaid(
   defineConfig({
+    srcDir: ACTIVE_COURSE_CONTENT_DIR,
     base: docsBase,
     title: courseConfig.site.title,
     description: courseConfig.site.description,
