@@ -1,5 +1,5 @@
 export function buildFontStylesheetLinks(courseConfig) {
-  return (courseConfig.theme.fontStylesheets || []).map((href) => [
+  return (courseConfig?.theme?.fontStylesheets || []).map((href) => [
     "link",
     {
       rel: "stylesheet",
@@ -9,14 +9,21 @@ export function buildFontStylesheetLinks(courseConfig) {
 }
 
 export function buildMermaidThemeVariables(courseConfig) {
-  const { light } = courseConfig.theme.colors;
+  const light = courseConfig?.theme?.colors?.light || {
+    bgAlt: "#f8fafc",
+    divider: "#e2e8f0",
+    text1: "#0f172a",
+    text3: "#475569",
+  };
 
   return {
     primaryColor: light.bgAlt,
     primaryBorderColor: light.divider,
     primaryTextColor: light.text1,
     lineColor: light.text3,
-    fontFamily: courseConfig.theme.typography.mermaid,
+    fontFamily:
+      courseConfig?.theme?.typography?.mermaid ||
+      'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     fontSize: "18px",
   };
 }

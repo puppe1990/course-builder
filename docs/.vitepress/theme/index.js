@@ -1,6 +1,10 @@
 import DefaultTheme from "vitepress/theme";
 import { buildCourseCssTokens } from "../course-branding.mjs";
-import { getFeaturedCourseManifest } from "../course-registry.mjs";
+import {
+  getFallbackTheme,
+  getFeaturedCourseManifest,
+  getPlatformConfig,
+} from "../course-registry.mjs";
 import { resolveCourseContextFromPath } from "../course-routes.mjs";
 import CourseCatalogHome from "./components/CourseCatalogHome.vue";
 import CourseHome from "./components/CourseHome.vue";
@@ -20,7 +24,10 @@ let mermaidViewerScale = 1;
 function getBrandingManifest(pathname = "/") {
   return (
     resolveCourseContextFromPath(pathname)?.manifest ||
-    getFeaturedCourseManifest()
+    getFeaturedCourseManifest() || {
+      ...getPlatformConfig(),
+      theme: getFallbackTheme(),
+    }
   );
 }
 

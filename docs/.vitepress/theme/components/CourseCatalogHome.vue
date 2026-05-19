@@ -8,6 +8,7 @@ import {
 
 const courses = computed(() => getCourseCatalog());
 const featuredCourse = computed(() => getFeaturedCourseEntry());
+const hasCourses = computed(() => courses.value.length > 0);
 
 function formatCount(value, singular, plural) {
   return `${value} ${value === 1 ? singular : plural}`;
@@ -30,14 +31,22 @@ function resolveSitePath(path) {
         pode navegar entre os cursos sem trocar a configuração do projeto.
       </p>
 
-      <div class="course-catalog__active">
+      <div v-if="featuredCourse" class="course-catalog__active">
         <span class="course-catalog__active-label">Curso em destaque</span>
         <strong>{{ featuredCourse.title }}</strong>
         <a :href="resolveSitePath(featuredCourse.homePath)">Abrir destaque</a>
       </div>
+      <div v-else class="course-catalog__active">
+        <span class="course-catalog__active-label">Biblioteca vazia</span>
+        <strong>Nenhum curso sincronizado localmente</strong>
+        <span
+          >Adicione cursos externos e rode a sincronização para popular a
+          biblioteca.</span
+        >
+      </div>
     </section>
 
-    <section class="course-catalog__grid">
+    <section v-if="hasCourses" class="course-catalog__grid">
       <article
         v-for="course in courses"
         :key="course.slug"
@@ -99,6 +108,9 @@ function resolveSitePath(path) {
           </a>
         </div>
       </article>
+    </section>
+    <section v-else class="course-catalog__empty">
+      <p>Não há cursos disponíveis nesta instalação local.</p>
     </section>
   </div>
 </template>

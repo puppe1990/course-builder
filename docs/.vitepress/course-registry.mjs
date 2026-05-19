@@ -57,3 +57,60 @@ export function getAllFontStylesheets() {
     ),
   ];
 }
+
+export function getFallbackTheme() {
+  return {
+    fontStylesheets: [],
+    typography: {
+      body: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      heading:
+        'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      mono: '"SFMono-Regular", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace',
+      mermaid:
+        'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    },
+    layout: {
+      maxWidth: "1200px",
+      sidebarWidth: "272px",
+      cardRadius: "20px",
+    },
+    effects: {
+      featureShadow: "0 20px 60px rgba(15, 23, 42, 0.10)",
+      featureShadowDark: "0 20px 60px rgba(2, 6, 23, 0.45)",
+    },
+    colors: {
+      light: {
+        bg: "#fffdf8",
+        bgAlt: "#f8fafc",
+        bgElevated: "#ffffff",
+        bgSoft: "#f1f5f9",
+        text2: "#334155",
+        divider: "#e2e8f0",
+        text1: "#0f172a",
+        text3: "#475569",
+        brand1: "#0f172a",
+        brand2: "#1d4ed8",
+        brand3: "#0ea5e9",
+        brandSoft: "#dbeafe",
+        sidebarBg: "rgba(255, 255, 255, 0.92)",
+        navBg: "rgba(255, 253, 248, 0.92)",
+      },
+      dark: {
+        bg: "#020617",
+        bgAlt: "#0f172a",
+        bgElevated: "#111827",
+        bgSoft: "#1e293b",
+        text1: "#e2e8f0",
+        text2: "#cbd5e1",
+        text3: "#94a3b8",
+        brand1: "#f8fafc",
+        brand2: "#60a5fa",
+        brand3: "#38bdf8",
+        brandSoft: "rgba(96, 165, 250, 0.18)",
+        divider: "rgba(148, 163, 184, 0.24)",
+        sidebarBg: "rgba(2, 6, 23, 0.88)",
+        navBg: "rgba(15, 23, 42, 0.88)",
+      },
+    },
+  };
+}
