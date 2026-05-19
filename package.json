@@ -7,12 +7,17 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write README.md WHITELABEL.md package.json .github/workflows docs/.vitepress scripts tests courses/*/course.manifest.mjs",
+    "format:check": "prettier --check README.md WHITELABEL.md package.json .github/workflows docs/.vitepress scripts tests courses/*/course.manifest.mjs",
+    "prepare": "husky",
     "test": "node --test tests/*.test.mjs",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "lecture:run": "tsx",
     "course:list": "node scripts/set-active-course.mjs --list",
+    "course:new": "node scripts/new-course.mjs",
     "course:activate": "node scripts/set-active-course.mjs",
     "screenshots:readme": "node --import tsx scripts/capture-readme-screenshots.ts",
     "pdf:export": "node --import tsx scripts/build-course-pdfs.ts",
@@ -20,15 +25,31 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.5",
     "mermaid": "^11.14.0",
     "pdf-lib": "^1.17.1",
     "playwright": "^1.59.1",
+    "prettier": "^3.5.3",
     "tsx": "^4.19.0",
+    "typescript-eslint": "^8.32.0",
     "typescript": "^5.7.0",
     "vitepress": "^1.6.4",
     "vitepress-plugin-mermaid": "^2.0.17"
   },
   "dependencies": {
     "github-slugger": "^2.0.0"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{md,json,yml,yaml,css,vue}": [
+      "prettier --write"
+    ]
   }
 }

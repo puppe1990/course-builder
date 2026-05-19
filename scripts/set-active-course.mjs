@@ -4,7 +4,10 @@ import process from "node:process";
 
 const repoRoot = process.cwd();
 const coursesDir = path.join(repoRoot, "courses");
-const activeCourseFile = path.join(repoRoot, "docs/.vitepress/active-course.mjs");
+const activeCourseFile = path.join(
+  repoRoot,
+  "docs/.vitepress/active-course.mjs",
+);
 
 function listCourseSlugs() {
   if (!fs.existsSync(coursesDir)) return [];
@@ -13,7 +16,9 @@ function listCourseSlugs() {
     .readdirSync(coursesDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .filter((slug) => fs.existsSync(path.join(coursesDir, slug, "course.manifest.mjs")))
+    .filter((slug) =>
+      fs.existsSync(path.join(coursesDir, slug, "course.manifest.mjs")),
+    )
     .sort();
 }
 
@@ -21,6 +26,8 @@ function buildActiveCourseModule(slug) {
   return `import courseManifest from "../../courses/${slug}/course.manifest.mjs";
 
 export const ACTIVE_COURSE_SLUG = "${slug}";
+export const ACTIVE_COURSE_CONTENT_DIR = "../courses/${slug}/docs";
+export const ACTIVE_COURSE_REPO_CONTENT_PREFIX = "courses/${slug}/docs";
 
 export default courseManifest;
 `;
@@ -58,6 +65,13 @@ if (!availableCourses.includes(slug)) {
   for (const courseSlug of availableCourses) {
     console.error(`- ${courseSlug}`);
   }
+  process.exit(1);
+}
+
+const courseDocsDir = path.join(coursesDir, slug, "docs");
+
+if (!fs.existsSync(courseDocsDir)) {
+  console.error(`Course is missing docs directory: courses/${slug}/docs`);
   process.exit(1);
 }
 

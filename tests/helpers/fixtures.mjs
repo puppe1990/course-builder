@@ -12,11 +12,11 @@ export function createSourceItems() {
   return {
     lectures: [
       { text: faker.lorem.word(), link: "/en/" },
-      { text: lectureTitle, link: `/en/lectures/${lectureSlug}/` }
+      { text: lectureTitle, link: `/en/lectures/${lectureSlug}/` },
     ],
     projects: [{ text: projectTitle, link: "/en/projects/" }],
     resources: [{ text: resourceTitle, link: "/en/resources/" }],
-    skills: [{ text: skillTitle, link: "/en/skills/" }]
+    skills: [{ text: skillTitle, link: "/en/skills/" }],
   };
 }
 
@@ -28,13 +28,13 @@ export function createLabels(overrides = {}) {
     skills: faker.lorem.word(),
     resourceLibrary: faker.lorem.words({ min: 1, max: 2 }),
     tryHarness: `${faker.lorem.words({ min: 1, max: 2 })} ↗`,
-    ...overrides
+    ...overrides,
   };
 }
 
 export function createEnglishLocaleMeta() {
   return {
     label: faker.location.country(),
-    lang: faker.helpers.arrayElement(["en", "en-US", "en-GB"])
+    lang: faker.helpers.arrayElement(["en", "en-US", "en-GB"]),
   };
 }

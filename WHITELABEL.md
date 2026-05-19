@@ -6,6 +6,7 @@ O projeto agora está estruturado para suportar múltiplos cursos com um curso a
 
 - curso ativo: [docs/.vitepress/active-course.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/active-course.mjs:1)
 - manifesto do curso atual: [courses/learn-harness-engineering/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/course.manifest.mjs:1)
+- conteúdo do curso atual: [courses/learn-harness-engineering/docs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/docs:1)
 - wrappers compatíveis com a camada antiga:
   - [docs/.vitepress/course.config.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course.config.mjs:1)
   - [docs/.vitepress/course-content.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course-content.mjs:1)
@@ -19,13 +20,15 @@ O projeto agora está estruturado para suportar múltiplos cursos com um curso a
 - manifesto de locales e labels de UI
 - currículo por locale
 - conteúdo da homepage por locale
+- conteúdo markdown por curso
 - seleção do curso ativo
 
 ## Como criar outro curso
 
 1. Crie uma pasta `courses/<slug>/`.
-2. Copie [courses/learn-harness-engineering/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/course.manifest.mjs:1) para o novo slug.
-3. Edite no manifesto:
+2. Crie `courses/<slug>/docs/`.
+3. Copie [courses/learn-harness-engineering/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/course.manifest.mjs:1) para o novo slug.
+4. Edite no manifesto:
    - `site.title`
    - `site.description`
    - `site.base`
@@ -35,17 +38,17 @@ O projeto agora está estruturado para suportar múltiplos cursos com um curso a
    - `locales`
    - `curriculum`
    - `homeByLocale`
-4. Aponte [docs/.vitepress/active-course.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/active-course.mjs:1) para o novo manifesto.
-5. Reescreva o conteúdo real em `docs/<locale>/` para bater com o currículo do novo curso.
+5. Adicione o conteúdo real em `courses/<slug>/docs/<locale>/` para bater com o currículo do novo curso.
+6. Ative o curso.
 
 Ou use os comandos:
 
 - `npm run course:list`
+- `npm run course:new -- <slug> "Course Title"`
 - `npm run course:activate -- <slug>`
 
 ## Limitações atuais
 
-- o conteúdo markdown em `docs/` ainda é do curso `Learn Harness Engineering`
 - o manifesto do curso atual ainda concentra muito conteúdo inline
 - ainda existe apenas um curso ativo por build
-- `README.md` ainda descreve o curso atual, não a plataforma
+- o builder ainda depende de manifests em código, não de uma camada editorial
