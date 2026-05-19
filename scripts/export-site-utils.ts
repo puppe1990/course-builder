@@ -2,6 +2,7 @@ import http from "node:http";
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { promises as fs } from "node:fs";
+import { ACTIVE_COURSE_CONTENT_DIR } from "../docs/.vitepress/active-course.mjs";
 
 export type Language = "en" | "zh";
 
@@ -19,10 +20,18 @@ export type ScreenshotTarget = {
 
 export const repoRoot = process.cwd();
 export const docsRoot = path.resolve(repoRoot, "docs");
+export const activeCourseDocsRoot = path.resolve(
+  docsRoot,
+  ACTIVE_COURSE_CONTENT_DIR,
+);
 export const distRoot = path.resolve(repoRoot, "docs/.vitepress/dist");
 export const artifactsRoot = path.resolve(repoRoot, "artifacts");
 export const pdfOutputRoot = path.resolve(artifactsRoot, "pdfs");
 export const readmeScreenshotsRoot = path.resolve(
+  activeCourseDocsRoot,
+  "public/screenshots/readme",
+);
+export const legacyReadmeScreenshotsRoot = path.resolve(
   docsRoot,
   "public/screenshots/readme",
 );
@@ -86,7 +95,7 @@ export function toAbsoluteSiteUrl(origin: string, routePath: string) {
 export async function discoverCoursePages(
   language: Language,
 ): Promise<CoursePage[]> {
-  const languageRoot = path.resolve(docsRoot, language);
+  const languageRoot = path.resolve(activeCourseDocsRoot, language);
   const files = await walkMarkdownFiles(languageRoot);
 
   return files
@@ -195,7 +204,7 @@ function shouldIncludeInCoursePdf(relativePath: string) {
 }
 
 function compareCourseFiles(language: Language, left: string, right: string) {
-  const languageRoot = path.resolve(docsRoot, language);
+  const languageRoot = path.resolve(activeCourseDocsRoot, language);
   const leftRelative = path.relative(languageRoot, left).replace(/\\/g, "/");
   const rightRelative = path.relative(languageRoot, right).replace(/\\/g, "/");
   const leftWeight = sortWeight(leftRelative);
@@ -216,7 +225,7 @@ function sortWeight(relativePath: string) {
 }
 
 function sourceFileToRoutePath(language: Language, filePath: string) {
-  const languageRoot = path.resolve(docsRoot, language);
+  const languageRoot = path.resolve(activeCourseDocsRoot, language);
   const relativePath = path
     .relative(languageRoot, filePath)
     .replace(/\\/g, "/");

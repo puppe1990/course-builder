@@ -1,7 +1,9 @@
 import path from "node:path";
+import { promises as fs } from "node:fs";
 import { chromium, devices } from "playwright";
 import {
   ensureDirectory,
+  legacyReadmeScreenshotsRoot,
   readmeScreenshotTargets,
   readmeScreenshotsRoot,
   startStaticServer,
@@ -10,6 +12,7 @@ import {
 
 async function main() {
   await ensureDirectory(readmeScreenshotsRoot);
+  await ensureDirectory(legacyReadmeScreenshotsRoot);
 
   const server = await startStaticServer();
   const browser = await chromium.launch({ headless: true });
@@ -18,13 +21,23 @@ async function main() {
   try {
     for (const target of readmeScreenshotTargets) {
       const page = await context.newPage();
+      const screenshotPath = path.join(
+        readmeScreenshotsRoot,
+        target.outputName,
+      );
       await page.goto(toAbsoluteSiteUrl(server.origin, target.routePath), {
         waitUntil: "networkidle",
       });
       await page.screenshot({
-        path: path.join(readmeScreenshotsRoot, target.outputName),
+        path: screenshotPath,
         fullPage: false,
       });
+      if (legacyReadmeScreenshotsRoot !== readmeScreenshotsRoot) {
+        await fs.copyFile(
+          screenshotPath,
+          path.join(legacyReadmeScreenshotsRoot, target.outputName),
+        );
+      }
       await page.close();
       console.log(`Captured ${target.outputName}`);
     }

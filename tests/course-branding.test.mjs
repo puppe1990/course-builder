@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 
 import bootcampManifest from "../courses/agent-ops-bootcamp/course.manifest.mjs";
 import courseManifest from "../docs/.vitepress/course.manifest.mjs";
@@ -53,6 +55,18 @@ test("course manifest centralizes product config in one source", () => {
     ACTIVE_COURSE_REPO_CONTENT_PREFIX,
     `courses/${ACTIVE_COURSE_SLUG}/docs`,
   );
+});
+
+test("active course content path resolves to a real course docs tree", () => {
+  const repoRoot = path.resolve(import.meta.dirname, "..");
+  const activeCourseDocsRoot = path.resolve(
+    repoRoot,
+    "docs",
+    ACTIVE_COURSE_CONTENT_DIR,
+  );
+
+  assert.equal(fs.existsSync(path.join(activeCourseDocsRoot, "en")), true);
+  assert.equal(fs.existsSync(path.join(activeCourseDocsRoot, "public")), true);
 });
 
 test("platform can load a second course manifest with distinct branding and curriculum", () => {
