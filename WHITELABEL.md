@@ -1,54 +1,44 @@
 # Whitelabel Guide
 
-O projeto agora está estruturado para suportar múltiplos cursos com um curso ativo definido pela camada VitePress.
+O repositório agora é apenas o builder. Os cursos devem ficar fora dele e entrar no site por sincronização.
 
-## Estrutura atual
+## Estrutura
 
-- curso ativo: [docs/.vitepress/active-course.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/active-course.mjs:1)
-- manifesto do curso atual: [courses/learn-harness-engineering/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/course.manifest.mjs:1)
-- conteúdo do curso atual: [courses/learn-harness-engineering/docs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/docs:1)
-- wrappers compatíveis com a camada antiga:
-  - [docs/.vitepress/course.config.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course.config.mjs:1)
-  - [docs/.vitepress/course-content.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course-content.mjs:1)
-  - [docs/.vitepress/course-curriculum.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course-curriculum.mjs:1)
-  - [docs/.vitepress/course-locales.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course-locales.mjs:1)
+- builder VitePress: `docs/.vitepress/`
+- catálogo inicial: `docs/index.md`
+- espelho gerado dos cursos: `docs/courses/`
+- configuração da fonte externa: `scripts/course-source-config.mjs`
+- sincronização: `scripts/sync-course-docs.mjs`
 
-## O que já está desacoplado
+## Fonte dos cursos
 
-- branding visual do site
-- config base do VitePress
-- manifesto de locales e labels de UI
-- currículo por locale
-- conteúdo da homepage por locale
-- conteúdo markdown por curso
-- seleção do curso ativo
+Por padrão, o builder procura cursos em:
 
-## Como criar outro curso
+```bash
+../course-builder-courses
+```
 
-1. Crie uma pasta `courses/<slug>/`.
-2. Crie `courses/<slug>/docs/`.
-3. Copie [courses/learn-harness-engineering/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/course.manifest.mjs:1) para o novo slug.
-4. Edite no manifesto:
-   - `site.title`
-   - `site.description`
-   - `site.base`
-   - `site.repoTreeUrl`
-   - `brand.logo`
-   - `theme.*`
-   - `locales`
-   - `curriculum`
-   - `homeByLocale`
-5. Adicione o conteúdo real em `courses/<slug>/docs/<locale>/` para bater com o currículo do novo curso.
-6. Ative o curso.
+Você pode trocar isso com:
 
-Ou use os comandos:
+```bash
+COURSE_SOURCE_DIR=../outro-diretorio npm run docs:dev
+```
 
-- `npm run course:list`
-- `npm run course:new -- <slug> "Course Title"`
-- `npm run course:activate -- <slug>`
+Cada curso externo precisa ter:
 
-## Limitações atuais
+1. `course.manifest.mjs`
+2. `docs/`
+3. conteúdo por locale compatível com o currículo definido no manifest
 
-- o manifesto do curso atual ainda concentra muito conteúdo inline
-- ainda existe apenas um curso ativo por build
-- o builder ainda depende de manifests em código, não de uma camada editorial
+## Fluxo
+
+1. Crie ou edite o curso fora deste repo.
+2. Rode `npm run courses:sync`.
+3. Rode `npm run docs:dev` ou `npm run docs:build`.
+4. Se quiser mudar o destaque do catálogo, rode `npm run course:activate -- <slug>`.
+
+## Observações
+
+- `courses/` neste repo está no `.gitignore`.
+- `docs/courses/` e `docs/.vitepress/generated-course-data.mjs` são artefatos gerados.
+- O site continua servindo múltiplos cursos em `/courses/<slug>/<locale>/...`.

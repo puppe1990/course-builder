@@ -1,7 +1,9 @@
-import courseManifest from "./course.manifest.mjs";
+import {
+  getFeaturedCourseManifest,
+  getPlatformConfig,
+} from "./course-registry.mjs";
 
 export default {
-  site: courseManifest.site,
-  brand: courseManifest.brand,
-  theme: courseManifest.theme,
+  ...getPlatformConfig(),
+  theme: getFeaturedCourseManifest().theme,
 };

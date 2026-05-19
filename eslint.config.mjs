@@ -9,14 +9,13 @@ const ignores = [
   "projects/**",
   "docs-readme/**",
   "skills/**",
-  "courses/**/docs/**",
+  "docs/courses/**",
 ];
 
 const jsFiles = [
   "docs/.vitepress/**/*.{js,mjs}",
   "scripts/**/*.{js,mjs}",
   "tests/**/*.{js,mjs}",
-  "courses/**/*.mjs",
 ];
 
 const tsFiles = ["scripts/**/*.ts", "docs/.vitepress/**/*.ts"];

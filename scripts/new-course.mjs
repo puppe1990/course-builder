@@ -2,9 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { execSync } from "node:child_process";
+import { externalCoursesDir } from "./course-source-config.mjs";
 
 const repoRoot = process.cwd();
-const coursesDir = path.join(repoRoot, "courses");
+const coursesDir = externalCoursesDir;
 
 function printUsage() {
   console.log("Usage:");
@@ -335,7 +336,7 @@ if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
 
 const courseDir = path.join(coursesDir, slug);
 if (fs.existsSync(courseDir)) {
-  console.error(`Course already exists: courses/${slug}`);
+  console.error(`Course already exists: ${courseDir}`);
   process.exit(1);
 }
 
@@ -358,10 +359,12 @@ fs.writeFileSync(
   "utf8",
 );
 
-console.log(`Created course scaffold: courses/${slug}`);
+console.log(`Created course scaffold: ${courseDir}`);
 console.log(`Title: ${title}`);
 console.log("");
 console.log("Next steps:");
 console.log(`- npm run course:activate -- ${slug}`);
-console.log(`- edit courses/${slug}/course.manifest.mjs`);
-console.log(`- replace the sample markdown under courses/${slug}/docs`);
+console.log(`- edit ${path.join(courseDir, "course.manifest.mjs")}`);
+console.log(
+  `- replace the sample markdown under ${path.join(courseDir, "docs")}`,
+);

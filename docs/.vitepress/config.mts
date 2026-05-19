@@ -7,12 +7,10 @@ import {
   buildMermaidThemeVariables,
 } from "./course-branding.mjs";
 import {
-  ACTIVE_COURSE_CONTENT_DIR,
-  ACTIVE_COURSE_REPO_CONTENT_PREFIX,
-} from "./active-course.mjs";
-import { getLocaleSourceItems } from "./course-curriculum.mjs";
-import { getLocaleEntries } from "./course-locales.mjs";
-import { createLocaleDefinition } from "./course-navigation.mjs";
+  getFeaturedCourseManifest,
+  getAllFontStylesheets,
+} from "./course-registry.mjs";
+import { buildGlobalNav, buildGlobalSidebar } from "./course-navigation.mjs";
 
 const docsBase = (() => {
   const configuredBase = process.env.DOCS_BASE_PATH ?? courseConfig.site.base;
@@ -23,28 +21,15 @@ const docsBase = (() => {
 
   return configuredBase.endsWith("/") ? configuredBase : `${configuredBase}/`;
 })();
-const brandLogo = courseConfig.brand.logo;
-const githubRepoTreeLink = courseConfig.site.repoTreeUrl;
-const fontStylesheetLinks = buildFontStylesheetLinks(courseConfig);
 
-const locales = Object.fromEntries(
-  getLocaleEntries().map((entry) => [
-    entry.key,
-    createLocaleDefinition({
-      locale: entry.key,
-      label: entry.label,
-      lang: entry.lang,
-      sourceItems: getLocaleSourceItems(entry.key),
-      labels: entry.labels,
-      repoTreeUrl: githubRepoTreeLink,
-      repoContentPrefix: ACTIVE_COURSE_REPO_CONTENT_PREFIX,
-    }),
-  ]),
-);
+const featuredCourseManifest = getFeaturedCourseManifest();
+const fontStylesheetLinks = buildFontStylesheetLinks({
+  theme: { fontStylesheets: getAllFontStylesheets() },
+});
 
 export default withMermaid(
   defineConfig({
-    srcDir: ACTIVE_COURSE_CONTENT_DIR,
+    srcDir: ".",
     base: docsBase,
     title: courseConfig.site.title,
     description: courseConfig.site.description,
@@ -53,14 +38,35 @@ export default withMermaid(
     ignoreDeadLinks: true,
     head: [
       ...fontStylesheetLinks,
-      ["link", { rel: "icon", type: "image/svg+xml", href: brandLogo }],
+      [
+        "link",
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: courseConfig.brand.logo,
+        },
+      ],
     ],
     themeConfig: {
-      logo: brandLogo,
+      logo: courseConfig.brand.logo,
+      nav: buildGlobalNav(),
+      sidebar: buildGlobalSidebar(),
+      outline: {
+        level: [2, 3],
+      },
+      docFooter: {
+        prev: "Previous",
+        next: "Next",
+      },
+      returnToTopLabel: "Return to top",
+      sidebarMenuLabel: "Menu",
+      darkModeSwitchLabel: "Theme",
+      lightModeSwitchTitle: "Switch to light theme",
+      darkModeSwitchTitle: "Switch to dark theme",
       search: {
         provider: "local",
       },
-      socialLinks: [{ icon: "github", link: githubRepoTreeLink }],
+      socialLinks: [{ icon: "github", link: courseConfig.site.repoTreeUrl }],
     },
     markdown: {
       theme: {
@@ -70,13 +76,12 @@ export default withMermaid(
     },
     mermaid: {
       theme: "base",
-      themeVariables: buildMermaidThemeVariables(courseConfig),
+      themeVariables: buildMermaidThemeVariables(featuredCourseManifest),
       flowchart: {
         nodeSpacing: 40,
         rankSpacing: 56,
         padding: 12,
       },
     },
-    locales,
   }),
 );

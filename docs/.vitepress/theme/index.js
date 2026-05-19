@@ -1,6 +1,8 @@
 import DefaultTheme from "vitepress/theme";
-import courseConfig from "../course.config.mjs";
 import { buildCourseCssTokens } from "../course-branding.mjs";
+import { getFeaturedCourseManifest } from "../course-registry.mjs";
+import { resolveCourseContextFromPath } from "../course-routes.mjs";
+import CourseCatalogHome from "./components/CourseCatalogHome.vue";
 import CourseHome from "./components/CourseHome.vue";
 import "./style.css";
 
@@ -15,14 +17,29 @@ let mermaidViewerNaturalHeight = 0;
 let mermaidViewerFitScale = 1;
 let mermaidViewerScale = 1;
 
-function applyCourseBranding() {
+function getBrandingManifest(pathname = "/") {
+  return (
+    resolveCourseContextFromPath(pathname)?.manifest ||
+    getFeaturedCourseManifest()
+  );
+}
+
+function applyCourseBranding(pathname = "/") {
   if (typeof document === "undefined") return;
 
   const root = document.documentElement;
-  const tokens = buildCourseCssTokens(courseConfig);
+  const manifest = getBrandingManifest(pathname);
+  const tokens = buildCourseCssTokens(manifest);
 
   for (const [name, value] of Object.entries(tokens)) {
     root.style.setProperty(name, value);
+  }
+
+  const iconLink =
+    document.querySelector('link[rel="icon"][type="image/svg+xml"]') ||
+    document.querySelector('link[rel="icon"]');
+  if (iconLink) {
+    iconLink.setAttribute("href", manifest.brand.logo);
   }
 }
 
@@ -371,7 +388,8 @@ export default {
   extends: DefaultTheme,
   enhanceApp(ctx) {
     ctx.app.component("CourseHome", CourseHome);
-    applyCourseBranding();
+    ctx.app.component("CourseCatalogHome", CourseCatalogHome);
+    applyCourseBranding(ctx.router.route.path);
     syncRootLocaleLabel(ctx.siteData);
     queueLocaleMenuDedupe();
     queueMermaidBinding();
@@ -379,7 +397,7 @@ export default {
 
     const previous = ctx.router.onAfterRouteChange;
     ctx.router.onAfterRouteChange = async (to) => {
-      applyCourseBranding();
+      applyCourseBranding(to);
       syncRootLocaleLabel(ctx.siteData, to);
       queueLocaleMenuDedupe();
       closeMermaidViewer();

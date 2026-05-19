@@ -1,82 +1,59 @@
 # course-builder
 
-Whitelabel VitePress course builder with multi-course manifest support.
+Reusable VitePress course builder. The repository contains the builder only; course source content can live outside the repo and is mirrored into `docs/courses/` during local dev and build.
 
-This repository is no longer only the `Learn Harness Engineering` course. It now contains:
+## How it works
 
-- a reusable VitePress course platform
-- one active course selected at build time
-- multiple course manifests under `courses/`
-- isolated course content under `courses/<slug>/docs`
+- external course source directory: `../course-builder-courses` by default
+- override source directory: `COURSE_SOURCE_DIR=/absolute/or/relative/path`
+- manifest contract per course: `<course-dir>/course.manifest.mjs`
+- markdown content per course: `<course-dir>/docs/<locale>/...`
+- generated mirror used by VitePress: `docs/courses/<slug>/`
+- generated runtime registry: `docs/.vitepress/generated-course-data.mjs`
 
-## Current structure
+The published site exposes:
 
-- active course selector: [docs/.vitepress/active-course.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/active-course.mjs:1)
-- active-course wrapper: [docs/.vitepress/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/course.manifest.mjs:1)
-- builder shell: [docs/.vitepress/config.mts](/Users/matheuspuppe/Desktop/estudo/course-builder/docs/.vitepress/config.mts:1)
-- course manifests:
-  - [courses/learn-harness-engineering/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/course.manifest.mjs:1)
-  - [courses/agent-ops-bootcamp/course.manifest.mjs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/agent-ops-bootcamp/course.manifest.mjs:1)
-- course content roots:
-  - [courses/learn-harness-engineering/docs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/learn-harness-engineering/docs:1)
-  - [courses/agent-ops-bootcamp/docs](/Users/matheuspuppe/Desktop/estudo/course-builder/courses/agent-ops-bootcamp/docs:1)
+- root catalog at `/`
+- one route tree per course at `/courses/<slug>/<locale>/...`
 
 ## Commands
 
 ```bash
 npm install
+npm run courses:sync
 npm test
-npm run docs:build
 npm run docs:dev
+npm run docs:build
 ```
 
-To inspect and switch courses:
+Useful course commands:
 
 ```bash
 npm run course:list
-npm run course:new -- my-new-course "My New Course"
-npm run course:activate -- learn-harness-engineering
-npm run course:activate -- agent-ops-bootcamp
+npm run course:new -- my-course "My Course"
+npm run course:activate -- my-course
 ```
 
-## How it works
+## External course layout
 
-Each course manifest defines:
+Each external course directory should look like:
 
-- `site`
-- `brand`
-- `theme`
-- `locales`
-- `curriculum`
-- `homeByLocale`
-
-The VitePress layer reads the active manifest and points `srcDir` at that course's own `docs` directory. Nav, sidebar, branding, homepage, and markdown content all come from the active course.
-
-## Creating a new course
-
-1. Create `courses/<slug>/course.manifest.mjs`.
-2. Or scaffold both manifesto and docs with `npm run course:new -- <slug> "Course Title"`.
-3. Create `courses/<slug>/docs/` if you did not use the scaffold command.
-4. Define the course `site`, `brand`, `theme`, `locales`, `curriculum`, and `homeByLocale`.
-5. Add markdown content under `courses/<slug>/docs/<locale>/...` to match the curriculum.
-6. Switch to it with `npm run course:activate -- <slug>`.
-
-## Current limitations
-
-- only one course is active per build
-- the current manifest format is code-first, not CMS-driven
-- only one course is active per build
-
-## Validation
-
-The repo currently validates:
-
-- manifest loading
-- branding token generation
-- locale-aware navigation generation
-- alternate course manifest loading
-- full VitePress production build
+```text
+course-builder-courses/
+  my-course/
+    course.manifest.mjs
+    docs/
+      index.md
+      en/
+        index.md
+        lectures/
+        projects/
+        resources/
+        skills/
+```
 
 ## Notes
 
-The second course, `agent-ops-bootcamp`, exists mainly as an architectural proof that the platform can host distinct branding and curriculum in the same repo.
+- `courses/` inside this repo is ignored and should not be used as the source of truth.
+- `docs/courses/` and generated registry files are local build artifacts and are ignored.
+- `npm test`, `npm run docs:dev`, and `npm run docs:build` sync external courses before running.

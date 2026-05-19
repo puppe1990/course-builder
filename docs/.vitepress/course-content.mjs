@@ -1,9 +1,25 @@
-import courseManifest from "./course.manifest.mjs";
+import {
+  FEATURED_COURSE_SLUG,
+  getCourseManifestBySlug,
+} from "./course-registry.mjs";
+import { getPrimaryLocaleForManifest } from "./course-routes.mjs";
 
-export function resolveCourseLocale(locale) {
-  return courseManifest.homeByLocale[locale] ? locale : "en";
+export function resolveCourseLocale(slug, locale) {
+  const manifest = getCourseManifestBySlug(slug);
+  if (!manifest) return locale;
+
+  return manifest.homeByLocale[locale]
+    ? locale
+    : getPrimaryLocaleForManifest(manifest);
+}
+
+export function getCourseHomeForCourse(slug, locale) {
+  const manifest = getCourseManifestBySlug(slug);
+  if (!manifest) return null;
+
+  return manifest.homeByLocale[resolveCourseLocale(slug, locale)];
 }
 
 export function getCourseHome(locale) {
-  return courseManifest.homeByLocale[resolveCourseLocale(locale)];
+  return getCourseHomeForCourse(FEATURED_COURSE_SLUG, locale);
 }
